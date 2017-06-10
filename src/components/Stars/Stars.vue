@@ -1,7 +1,7 @@
 <template>
 <div class="stares">
-  <div v-if="average !== 0" class="stares-item">
-    <span v-for="item in arr" :class="item" class="stares-i"></span>
+  <div v-if="average !== 0"  class="stares-item">
+    <span  v-for="item in arr" :class="[item,{averageClass:averageT}]" class="stares-i"></span>
   </div>
   <div class="average">{{average==0?'暂无评分':average}}</div>
 </div>
@@ -10,6 +10,9 @@
   const LENGTH = 5
     export default {
       props: {
+        averageT: {
+          dafault: false
+        },
         average: {
           type: Number,
           dafault: 0
@@ -43,7 +46,7 @@
   .stares .stares-item {
     display: inline-block;
   }
-  .stares .stares-item .stares-i {
+  .stares-i {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -53,17 +56,21 @@
   }
   .on {
     background-image: url('./star24_on@2x.png');
-    -webkit-background-size: 10px 10px;
-    background-size: 10px 10px;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
   }
   .off {
     background-image: url('./star24_off@2x.png');
-    -webkit-background-size: 10px 10px;
-    background-size: 10px 10px;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
   }
   .half {
     background-image: url('./star24_half@2x.png');
-    -webkit-background-size: 10px 10px;
-    background-size: 10px 10px;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+  }
+  .averageClass {
+    width: 20px;
+    height: 20px;
   }
 </style>

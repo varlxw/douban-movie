@@ -6,7 +6,7 @@
           <img :src="item.images.large" alt="">
         </div>
         <div class="info">
-          <div  class="name">{{item.title}}</div>
+          <div class="name">{{item.title}}</div>
           <div class="rank">
             <stars :average="item.rating.average"></stars>
           </div>
@@ -29,8 +29,8 @@
 <script>
   import stars from '../Stars/stars'
   import detailist from  '../detailist/detailist'
-export default {
-  data() {
+  export default {
+    data() {
       return {
         updata: {},
         hit: {},
@@ -38,61 +38,66 @@ export default {
         dataitem: ''
       }
     },
-  methods: {
-    detailst(item) {
-      this.dataitem = item
-      console.log(item)
-   //   this.$store.commit('itemdata', item)
-      if (!this.datailShow) {
-        this.datailShow = true
+    methods: {
+      detailst(item) {
+        this.dataitem = item
+        //     console.log(item)
+        //   this.$store.commit('itemdata', item)
+        if (!this.datailShow) {
+          this.datailShow = true
+        }
       }
+    },
+    computed: {
+      upt() {
+        if (this.$route.path === '/hit') {
+          return this.updata.hit
+        }
+        if (this.$route.path === '/soon') {
+          return this.updata.soon
+        }
+        if (this.$route.path === '/ranking') {
+          return this.updata.ranking
+        }
+      }
+    },
+    created() {
+      this.$http.jsonp('https://api.douban.com/v2/movie/in_theaters', {credentials: true}).then((response) => {
+        response = response.body
+        this.$store.commit('getHit', response)
+        this.hit = this.$store.state.hit.subjects
+        this.updata.hit = this.$store.state.hit.subjects
+        //   console.log(response)
+      }, (response) => {
+        console.log('err' + response)
+      })
+      this.$http.jsonp('https://api.douban.com/v2/movie/coming_soon', {credentials: true}).then((response) => {
+        response = response.body
+        this.$store.commit('getSoon', response)
+        this.updata.soon = this.$store.state.soon.subjects
+        //    console.log(response)
+      }, (response) => {
+        console.log('err' + response)
+      })
+      this.$http.jsonp('https://api.douban.com/v2/movie/top250', {credentials: true}).then((response) => {
+        response = response.body
+        this.$store.commit('getRanking', response)
+        this.updata.ranking = this.$store.state.ranking.subjects
+        //    console.log(response)
+      }, (response) => {
+        console.log('err' + response)
+      })
+      console.log(this.datailShow)
+      window.addEventListener('popstate', function (e) {
+        console.log(this.datailShow)
+        this.datailShow = false
+      }, false)
+    },
+    components: {
+      stars,
+      detailist
     }
-  },
-  computed: {
-    upt() {
-      if (this.$route.path === '/hit') {
-        return this.updata.hit
-      }
-      if (this.$route.path === '/soon') {
-        return this.updata.soon
-      }
-      if (this.$route.path === '/ranking') {
-        return this.updata.ranking
-      }
-    }
-  },
-  created() {
-    this.$http.jsonp('https://api.douban.com/v2/movie/in_theaters', { credentials: true }).then((response) => {
-      response = response.body
-      this.$store.commit('getHit', response)
-      this.hit = this.$store.state.hit.subjects
-      this.updata.hit = this.$store.state.hit.subjects
-   //   console.log(response)
-    }, (response) => {
-      console.log('err' + response)
-    })
-    this.$http.jsonp('https://api.douban.com/v2/movie/coming_soon', { credentials: true }).then((response) => {
-      response = response.body
-      this.$store.commit('getSoon', response)
-      this.updata.soon = this.$store.state.soon.subjects
-  //    console.log(response)
-    }, (response) => {
-      console.log('err' + response)
-    })
-    this.$http.jsonp('https://api.douban.com/v2/movie/top250', { credentials: true }).then((response) => {
-      response = response.body
-      this.$store.commit('getRanking', response)
-      this.updata.ranking = this.$store.state.ranking.subjects
-  //    console.log(response)
-    }, (response) => {
-      console.log('err' + response)
-    })
-  },
-  components: {
-    stars,
-    detailist
   }
- }
 </script>
 
 <style>
@@ -102,6 +107,7 @@ export default {
     margin-leght: auto;
     /*background-color: #666;*/
   }
+
   .hit-item {
     float: left;
     width: 33.3333%;
@@ -113,20 +119,24 @@ export default {
     /*background-color: pink;*/
     min-height: 87px;
   }
+
   .item-img {
     min-height: 87px;
     overflow: hidden;
     width: 100%;
   }
+
   .item-img img {
-    height:149px;
+    height: 149px;
     display: block;
   }
+
   .info {
     height: 45px;
     box-sizing: border-box;
     font-size: 13px;
   }
+
   .info .name {
     font-size: 13px;
     font-weight: normal;
@@ -140,12 +150,14 @@ export default {
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
   }
+
   .info .rank {
     height: 16px;
     font-size: 12px;
     padding-top: 3px;
     text-align: center;
   }
+
   .datail {
     position: fixed;
     z-index: 2;
@@ -155,10 +167,12 @@ export default {
     top: 0;
     background: #fff;
   }
+
   .datail-wrapper {
     min-height: 100%;
     width: 100%;
   }
+
   .datail-main {
   }
 
